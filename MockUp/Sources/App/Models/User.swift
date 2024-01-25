@@ -18,11 +18,11 @@ final class User: Model, Content {
     var gender: String
     
     @Field(key: "birthday")
-    var birthday: Date
+    var birthday: String
     
     init() { }
     
-    init(id: UUID? = nil, name: String, age: Int, gender: String, birthday: Date) {
+    init(id: UUID? = nil, name: String, age: Int, gender: String, birthday: String) {
         self.id = id
         self.name = name
         self.age = age

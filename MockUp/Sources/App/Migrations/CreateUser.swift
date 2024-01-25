@@ -7,7 +7,7 @@ struct CreateUser: Migration {
             .field("name", .string, .required)
             .field("age", .int, .required)
             .field("gender", .string, .required)
-            .field("birthday", .date, .required)
+            .field("birthday", .string, .required)
             .create()
     }
 
