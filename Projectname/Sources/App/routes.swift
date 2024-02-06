@@ -1,5 +1,7 @@
 import Fluent
 import Vapor
+import WebSocketKit
+import Leaf
 
 func routes(_ app: Application) throws {
     app.post("authors") { req -> EventLoopFuture<Author> in
@@ -24,5 +26,18 @@ func routes(_ app: Application) throws {
         return Book.query(on: req.db).with(\.$author).all()
     }
 
+    app.webSocket("chat") { req, ws in
+        ws.onText { ws, text in
+            print("recieved message: \(text)")
+            ws.send("Echo: \(text)")
+        }
+    }
+    
+    
+//        app.get("swiftui") { req -> EventLoopFuture<View> in
+//            return req.view.render("swiftui", ContentView())
+//        
+//    }
     try app.register(collection: TodoController())
+    
 }
