@@ -12,6 +12,7 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(CreateAuthor())
     app.migrations.add(CreateBook())
+    app.migrations.add(CreateChatMessage())
 
     // register routes
     try routes(app)

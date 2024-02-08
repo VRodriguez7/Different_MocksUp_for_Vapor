@@ -13,6 +13,11 @@ func routes(_ app: Application) throws {
         Author.query(on: req.db).all()
     }
     
+    app.get("chat_messages") {req -> EventLoopFuture<[ChatMessage]> in
+        ChatMessage.query(on: req.db).all()
+    }
+    
+    
     app.post("books") { req -> EventLoopFuture<Book> in
         let book = try req.content.decode(Book.self)
         return book.create(on: req.db).map { book }
@@ -26,13 +31,31 @@ func routes(_ app: Application) throws {
         return Book.query(on: req.db).with(\.$author).all()
     }
 
+//    app.webSocket("chat") { req, ws in
+//        ws.onText { ws, text in
+//            print("recieved message: \(text)")
+//            ws.send("Echo: \(text)")
+//        }
+//    }
+    
     app.webSocket("chat") { req, ws in
-        ws.onText { ws, text in
-            print("recieved message: \(text)")
-            ws.send("Echo: \(text)")
+        ws.onText{ ws, text in
+            let chatMessage = ChatMessage(content: text)
+            chatMessage.save(on: req.db).whenComplete { _ in }
         }
     }
     
+    app.post("chat_messages") { req -> Response in
+        return Response(status: .ok)
+    }
+    
+    app.post("chat_messages") { req -> Response in
+        let data = try ChatMessage.query(on: req.db).all()
+        
+        print(data)
+        
+        return Response(status: .ok)
+    }
     
 //        app.get("swiftui") { req -> EventLoopFuture<View> in
 //            return req.view.render("swiftui", ContentView())
